@@ -1,0 +1,1 @@
+docker exec -it private_investigator /bin/bash
