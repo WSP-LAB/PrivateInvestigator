@@ -21,9 +21,9 @@ We also provide the expected time required to run each experiments with one GPU 
 
 ## Model Access Token
 
-To use OpenELM in the experiments, generate a token of you Hugging Face account and gain access 
+To use OpenELM in the experiments, generate a token of your Hugging Face account and gain access 
 on the Llama-2-7b model (https://huggingface.co/meta-llama/Llama-2-7b). 
-Type your token during executing command for launching Docker contatiner.
+Type your token during executing command for launching Docker container.
 In case OpenELM would be not used, this procedure can be ignored.
 
 
@@ -184,7 +184,7 @@ PII extraction results will be stored in the `experiments/all_attack_result.txt`
 
 Instructions below analyze the main experiment results obtained by preceding main experiments, 
 so the main experiments above should be executed before running the below analysis experiments.
-Each script reproduces the results in Section 5 and 6, 
+Each script reproduces the results in Sections 5 and 6, 
 and all experiments are denoted with the corresponding result table and figure in our paper.
 Note that each analysis experiment could be executed independently.
 
