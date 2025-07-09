@@ -41,6 +41,7 @@ def load_openelm(model_path):
     from huggingface_hub import login
     login(token='Model_Access_Token')
     tokenizer = AutoTokenizer.from_pretrained('meta-llama/Llama-2-7b-hf', trust_remote_code=True, model_max_length=4096)
+    tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     tokenizer.padding_side = "left" 
     model = AutoModelForCausalLM.from_pretrained(model_path, return_dict=True, trust_remote_code=True).eval().to('cuda')
     model.config.use_cache = False
