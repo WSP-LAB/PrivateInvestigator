@@ -1,7 +1,6 @@
 import argparse
 from os import path
 
-from concurrent.futures import ProcessPoolExecutor
 from tqdm import tqdm
 import numpy as np
 import pickle
@@ -9,7 +8,9 @@ import yaml
 import torch
 from scipy.spatial.distance import cosine
 
+from pii_leakage.arguments.dataset_args import DatasetArgs
 from pii_leakage.arguments.model_args import ModelArgs
+from pii_leakage.dataset.dataset_factory import DatasetFactory
 from pii_leakage.models.model_factory import ModelFactory
 from private_investigator.pii_collector import PIICollector
 
@@ -19,6 +20,8 @@ def collect_prefix_pii_pairs_inner(texts, ground_truth, target):
     all_pairs = []
     all_piis = []
     for text in texts:
+        if isinstance(text, dict):
+            text = text['text']
         piis = pii_collector.get_pii([text])
         train_piis = []
         for pii in piis:
@@ -104,10 +107,10 @@ def collect_prefix_pii_pairs(model, dataset, target):
 
     print('Collect exclusive pairs in dataset')
     ground_dict = {}
-    dataset_path = f"contextual_similarity/{dataset}_merged.txt"
-    with open(dataset_path, "r") as f:
-        body_text = f.read()
-    train_texts = body_text.split("\n|$$|\n")
+    dataset_args = DatasetArgs(dataset_path = f'../src/pii_leakage/extern/{dataset}')
+    train_texts = DatasetFactory.from_dataset_args(
+        dataset_args.set_split("train")
+    )
     ground_prefix_pii, _ = collect_prefix_pii_pairs_inner(train_texts, ours_exclusive_piis, target)
     for prefix, pii in ground_prefix_pii:
         if pii not in ground_dict:
@@ -191,7 +194,6 @@ def compute_cossim(ours_dict, base_dict, ground_dict):
 
 
 def compare_pii_perplexity(model, dataset, target):
-
     # get pii prefix pairs
     piiprefix_path = f'contextual_similarity/{model}-{dataset}-{target}.yml'
     if path.isfile(piiprefix_path):
